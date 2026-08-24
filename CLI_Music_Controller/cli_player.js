@@ -87,7 +87,7 @@ function listSongs(songDirectoryPath) {
     });
 
     output += '\x1b[2K\n\x1b[2K\n';
-    output += '\x1b[2K↑/↓ or n/b Navigate | Enter Play | Ctrl+C Exit\n';
+    output += '\x1b[2K↑/↓ Navigate | n/b Next/Prev & Play | Enter Play | Ctrl+C Exit\n';
 
     process.stdout.write(output);
 
@@ -153,6 +153,10 @@ process.stdin.on('data', (rawUserInput) => {
             userSelectionIndex + 1
         );
         listSongs(SONGS_DIR);
+        const selectedSong = songs[userSelectionIndex];
+        if (selectedSong) {
+            playSong(path.join(SONGS_DIR, selectedSong));
+        }
         return;
     }
 
@@ -162,6 +166,10 @@ process.stdin.on('data', (rawUserInput) => {
             userSelectionIndex - 1
         );
         listSongs(SONGS_DIR);
+        const selectedSong = songs[userSelectionIndex];
+        if (selectedSong) {
+            playSong(path.join(SONGS_DIR, selectedSong));
+        }
         return;
     }
 
