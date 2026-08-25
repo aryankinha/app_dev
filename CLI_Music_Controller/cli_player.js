@@ -102,7 +102,9 @@ function playSong(songFilePath) {
         currentPlayer = null;
     }
 
-    currentPlayer = spawn('afplay', [songFilePath]);
+    currentPlayer = spawn('vlc', ['--intf', 'rc', songFilePath],
+        { stdio: 'inherit' | 'pipe' }
+    );
 
     currentPlayer.on('exit', () => {
         currentPlayer = null;
