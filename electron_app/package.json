@@ -5,9 +5,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dev": "electron ."
   },
   "devDependencies": {
-    "electron": "^34.0.0"
+    "electron": "^44.1.0"
   }
 }
