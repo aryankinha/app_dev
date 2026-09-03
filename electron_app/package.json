@@ -7,13 +7,15 @@
   "scripts": {
     "dev": "concurrently -k -r -s first \"npm run dev:react\" \"npm run dev:electron\"",
     "dev:react": "vite",
-    "dev:electron": "wait-on tcp:5173 && cross-env NODE_ENV=development electron .",
+    "dev:electron": "wait-on tcp:5173 && nodemon --watch app --watch .env --ext js,env --exec \"cross-env NODE_ENV=development electron .\"",
     "build": "vite build",
     "preview": "vite preview",
     "start": "npm run dev",
-    "start:prod": "cross-env NODE_ENV=production electron ."
+    "start:prod": "cross-env NODE_ENV=production electron .",
+    "electron": "electron ."
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
   },
@@ -29,6 +31,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.4",
     "globals": "^17.11.0",
+    "nodemon": "^3.1.14",
     "vite": "^8.2.2",
     "wait-on": "^8.0.2"
   }

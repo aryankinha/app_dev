@@ -1,53 +1,36 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow } from 'electron';
 import path from 'path';
-import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const isDev = process.env.NODE_ENV === 'development';
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
-    width: 1100,
-    height: 750,
-    minWidth: 800,
-    minHeight: 600,
+    width: 1000,
+    height: 720,
+    minWidth: 750,
+    minHeight: 500,
     backgroundColor: '#0f172a',
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: false,
-      contextIsolation: true,
-      sandbox: false,
+      devTools: true,
     },
     show: false,
   });
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();
+    mainWindow.webContents.openDevTools();
   });
 
-  const distPath = path.join(__dirname, '../dist/index.html');
-  const isDev = process.env.NODE_ENV === 'development';
 
   if (isDev) {
-    mainWindow.loadURL('http://localhost:5173').catch(() => {
-      if (fs.existsSync(distPath)) {
-        mainWindow.loadFile(distPath);
-      }
-    });
-  } else if (fs.existsSync(distPath)) {
-    mainWindow.loadFile(distPath);
+    mainWindow.loadURL('http://localhost:5173');
   } else {
-    mainWindow.loadURL('http://localhost:5173').catch(() => {
-      if (fs.existsSync(distPath)) {
-        mainWindow.loadFile(distPath);
-      }
-    });
+    mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
   }
 }
-
-// Handle IPC messages
-ipcMain.handle('ping', () => 'pong from Electron Main Process');
 
 app.whenReady().then(() => {
   createWindow();
