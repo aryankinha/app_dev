@@ -1,7 +1,16 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 
 let mainWindow = null;
+let startTimestamp = null;
+let timerInterval = null;
+
+function stopTimer() {
+    if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+    }
+}
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -23,9 +32,25 @@ function createWindow() {
     loadURL();
 }
 
+ipcMain.handle('start-timer', () => {
+    stopTimer();
+    startTimestamp = Date.now();
+    timerInterval = setInterval(() => {
+        if (mainWindow && !mainWindow.isDestroyed()) {
+            mainWindow.webContents.send('timer', Math.floor((Date.now() - startTimestamp) / 1000));
+        }
+    }, 1000);
+});
+
+ipcMain.handle('quit-app', () => {
+    stopTimer();
+    app.quit();
+});
+
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
+    stopTimer();
     if (process.platform !== 'darwin') {
         app.quit();
     }
