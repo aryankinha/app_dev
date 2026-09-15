@@ -1,0 +1,364 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  background-color: #f8fafc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  color: #1e293b;
+  color-scheme: light;
+}
+
+.page-container {
+  width: 100%;
+  max-width: 860px;
+  padding: 40px 20px;
+  margin: 0 auto;
+}
+
+/* Header */
+.header-section {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.header-section h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.header-section p {
+  font-size: 15px;
+  color: #475569;
+  font-weight: 500;
+}
+
+/* Main Card Wrapper */
+.card-container {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 36px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02);
+  margin-bottom: 24px;
+}
+
+/* Section Item */
+.permission-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.permission-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  flex: 1;
+}
+
+.icon-box {
+  width: 44px;
+  height: 44px;
+  background-color: #f1f5f9;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f172a;
+  flex-shrink: 0;
+}
+
+.permission-content h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 4px;
+}
+
+.permission-content p {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 18px;
+}
+
+/* Divider Line */
+.divider {
+  height: 1px;
+  background-color: #f1f5f9;
+  margin: 28px 0;
+}
+
+.camera-box {
+  width: 150px;
+  height: 110px;
+  border-radius: 10px;
+  border: 1px dashed #cbd5e1;
+  background-color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.camera-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+}
+
+.video-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #000;
+}
+
+/* Base Buttons */
+.btn {
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Dark / Actionable Button */
+.btn-black {
+  background-color: #050505;
+  color: #ffffff;
+}
+
+.btn-black:hover:not(:disabled) {
+  background-color: #262626;
+}
+
+/* Success / Granted Permission Button */
+.btn-success {
+  background-color: #ecfdf5;
+  color: #059669;
+  border: 1px solid #10b981;
+  font-weight: 600;
+}
+
+.btn-success:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+/* Bottom Action Buttons */
+.bottom-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.bottom-actions .btn-primary {
+  min-width: 200px;
+  padding: 14px 28px;
+  font-size: 15px;
+}
+
+.btn-primary {
+  background-color: #8bb4f8;
+  color: #ffffff;
+}
+
+.btn-primary:not(:disabled) {
+  background-color: #2563eb;
+}
+
+.btn-primary:not(:disabled):hover {
+  background-color: #1d4ed8;
+}
+
+.btn-outline {
+  background-color: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-outline:hover {
+  background-color: #f8fafc;
+}
+
+
+/* Exam Screen */
+.exam-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  text-align: left;
+}
+
+.exam-badge {
+  background: #f1f5f9;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.exam-camera-pip {
+  width: 90px;
+  height: 68px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #cbd5e1;
+  background-color: #000000;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  flex-shrink: 0;
+}
+
+.question-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 16px 0 20px 0;
+  text-align: left;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  font-size: 15px;
+  background-color: #ffffff;
+  color: #0f172a;
+  transition: all 0.15s ease;
+}
+
+.option-item:hover {
+  background-color: #f8fafc;
+  border-color: #93c5fd;
+}
+
+.option-item.selected {
+  border-color: #2563eb;
+  background-color: #eff6ff;
+  color: #1e40af;
+  font-weight: 600;
+}
+
+.option-item input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #2563eb;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.palette-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.palette-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  color: #0f172a;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.palette-btn:hover {
+  background-color: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.palette-btn.active {
+  border-color: #2563eb;
+  background-color: #2563eb;
+  color: #ffffff;
+}
+
+.palette-btn.answered {
+  border-color: #10b981;
+  background-color: #ecfdf5;
+  color: #059669;
+}
+
+.palette-btn.answered.active {
+  background-color: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+}
+
+.result-box {
+  text-align: center;
+  padding: 36px;
+}
+
+.result-box h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f172a !important;
+  margin-bottom: 8px;
+}
+
+.result-stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 24px 0;
+}
+
+.stat-item h4 {
+  font-size: 28px;
+  color: #0f172a;
+}
+
+.stat-item p {
+  color: #64748b;
+  font-size: 14px;
+}
