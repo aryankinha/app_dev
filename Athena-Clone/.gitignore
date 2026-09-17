@@ -1,4 +1,5 @@
 node_modules/
+dist/
 user-camera-snap/
 user-screen-snap/
 .DS_Store
