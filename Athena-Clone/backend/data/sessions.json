@@ -1,0 +1,70 @@
+[
+  {
+    "sessionId": "session-1790145382625",
+    "startedAt": "2026-09-23T06:36:22.625Z",
+    "submittedAt": null,
+    "status": "in-progress",
+    "attempted": 0,
+    "correct": 0,
+    "wrong": 0,
+    "answers": []
+  },
+  {
+    "sessionId": "session-1790145856453",
+    "startedAt": "2026-09-23T06:44:16.453Z",
+    "submittedAt": "2026-09-23T06:44:24.144Z",
+    "status": "submitted",
+    "attempted": 5,
+    "correct": 1,
+    "wrong": 4,
+    "answers": [
+      {
+        "questionId": 1,
+        "selectedAnswer": 0,
+        "isCorrect": false,
+        "answeredAt": "2026-09-23T06:44:24.129Z"
+      },
+      {
+        "questionId": 2,
+        "selectedAnswer": 1,
+        "isCorrect": false,
+        "answeredAt": "2026-09-23T06:44:24.135Z"
+      },
+      {
+        "questionId": 3,
+        "selectedAnswer": 3,
+        "isCorrect": false,
+        "answeredAt": "2026-09-23T06:44:24.137Z"
+      },
+      {
+        "questionId": 4,
+        "selectedAnswer": 2,
+        "isCorrect": false,
+        "answeredAt": "2026-09-23T06:44:24.138Z"
+      },
+      {
+        "questionId": 5,
+        "selectedAnswer": 1,
+        "isCorrect": true,
+        "answeredAt": "2026-09-23T06:44:24.140Z"
+      }
+    ]
+  },
+  {
+    "sessionId": "session-1790146185165",
+    "startedAt": "2026-09-23T06:49:45.165Z",
+    "submittedAt": "2026-09-23T06:49:54.657Z",
+    "status": "submitted",
+    "attempted": 1,
+    "correct": 1,
+    "wrong": 0,
+    "answers": [
+      {
+        "questionId": 1,
+        "selectedAnswer": 1,
+        "isCorrect": true,
+        "answeredAt": "2026-09-23T06:49:54.651Z"
+      }
+    ]
+  }
+]
