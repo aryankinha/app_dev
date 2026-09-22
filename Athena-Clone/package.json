@@ -1,0 +1,12 @@
+{
+  "name": "ad-full-athena",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node start.js",
+    "electron": "node start.js --electron",
+    "backend": "npm start --prefix backend",
+    "frontend": "npm run dev --prefix frontend"
+  }
+}
