@@ -15,6 +15,12 @@ contextBridge.exposeInMainWorld("athena", {
     storeCameraSnapImageOnDisk: (data) => {
         ipcRenderer.invoke('store-camera-snap-image-on-disk', data);
     },
+    storeScreenSnapImageOnDisk: (data) => {
+        ipcRenderer.invoke('store-screen-snap-image-on-disk', data);
+    },
+    captureScreenNow: () => {
+        return ipcRenderer.invoke('capture-screen-now');
+    },
     setFullScreen: (enable = true) => {
         return ipcRenderer.invoke("set-fullscreen", enable);
     },
@@ -25,6 +31,5 @@ contextBridge.exposeInMainWorld("athena", {
         const fn = (_event, isFs) => callback(isFs);
         ipcRenderer.on('fullscreen-change', fn);
         return () => ipcRenderer.removeListener('fullscreen-change', fn);
-    },
-    quitApp: () => ipcRenderer.invoke('quit-app')
+    }
 });

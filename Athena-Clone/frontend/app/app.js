@@ -1,24 +1,68 @@
-import { app, BrowserWindow, ipcMain, session } from "electron";
+import { app, BrowserWindow, ipcMain, session, screen, desktopCapturer } from "electron";
 import path from "path";
 import fs from "fs";
 
 let electronWindow = null;
 let startTimestamp = null;
 let timerInterval = null;
-let cameraInterval = null;
+let proctorInterval = null;
+
+const CAMERA_DIR = path.join(import.meta.dirname, "user-camera-snap");
+const SCREEN_DIR = path.join(import.meta.dirname, "user-screen-snap");
+
+function ensureDirs() {
+    if (!fs.existsSync(CAMERA_DIR)) fs.mkdirSync(CAMERA_DIR, { recursive: true });
+    if (!fs.existsSync(SCREEN_DIR)) fs.mkdirSync(SCREEN_DIR, { recursive: true });
+}
+
+async function captureOsScreen() {
+    try {
+        const primaryDisplay = screen.getPrimaryDisplay();
+        const { width, height } = primaryDisplay.size;
+        const scaleFactor = primaryDisplay.scaleFactor || 1;
+
+        const sources = await desktopCapturer.getSources({
+            types: ['screen'],
+            thumbnailSize: {
+                width: Math.round(width * scaleFactor),
+                height: Math.round(height * scaleFactor)
+            }
+        });
+
+        if (sources && sources.length > 0 && !sources[0].thumbnail.isEmpty()) {
+            return sources[0].thumbnail.toJPEG(80);
+        }
+    } catch (_err) {
+        // Fallback to window capture if desktop permission not granted
+    }
+
+    if (electronWindow && !electronWindow.isDestroyed()) {
+        try {
+            const img = await electronWindow.capturePage();
+            if (!img.isEmpty()) {
+                return img.toJPEG(80);
+            }
+        } catch (err) {
+            console.error("Window capturePage error:", err);
+        }
+    }
+    return null;
+}
 
 function stopTimers() {
     if (timerInterval) {
         clearInterval(timerInterval);
         timerInterval = null;
     }
-    if (cameraInterval) {
-        clearInterval(cameraInterval);
-        cameraInterval = null;
+    if (proctorInterval) {
+        clearInterval(proctorInterval);
+        proctorInterval = null;
     }
 }
 
 function createWindow() {
+    ensureDirs();
+
     electronWindow = new BrowserWindow({
         height: 850,
         width: 1100,
@@ -63,7 +107,13 @@ ipcMain.handle('set-fullscreen', (_event, enable) => {
         } else {
             electronWindow.setFullScreen(true);
         }
+        electronWindow.setKiosk(true);
+        electronWindow.setAlwaysOnTop(true, 'screen-saver');
+        electronWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
     } else {
+        electronWindow.setAlwaysOnTop(false);
+        electronWindow.setVisibleOnAllWorkspaces(false);
+        electronWindow.setKiosk(false);
         if (process.platform === 'darwin') {
             electronWindow.setSimpleFullScreen(false);
         } else {
@@ -76,22 +126,35 @@ ipcMain.handle('set-fullscreen', (_event, enable) => {
 
 ipcMain.handle('is-fullscreen', () => {
     if (!electronWindow) return false;
-    return electronWindow.isFullScreen() || (process.platform === 'darwin' && electronWindow.isSimpleFullScreen());
+    return electronWindow.isKiosk() || electronWindow.isFullScreen() || (process.platform === 'darwin' && electronWindow.isSimpleFullScreen());
 });
 
 ipcMain.handle('start-timer', () => {
     stopTimers();
     startTimestamp = Date.now();
 
+    // 1. Send Timer Tick every 1s
     timerInterval = setInterval(() => {
         if (electronWindow && !electronWindow.isDestroyed()) {
             electronWindow.webContents.send('timer', Math.floor((Date.now() - startTimestamp) / 1000));
         }
     }, 1000);
 
-    cameraInterval = setInterval(() => {
+    // 2. Periodic Proctoring Capture every 5s (webcam snap + OS screen capture)
+    proctorInterval = setInterval(async () => {
         if (electronWindow && !electronWindow.isDestroyed()) {
             electronWindow.webContents.send('camera-shot');
+
+            try {
+                const screenBuffer = await captureOsScreen();
+                if (screenBuffer) {
+                    ensureDirs();
+                    const filePath = path.join(SCREEN_DIR, `${Date.now()}.jpg`);
+                    fs.writeFileSync(filePath, screenBuffer);
+                }
+            } catch (err) {
+                console.error("OS Screen capture error:", err);
+            }
         }
     }, 5000);
 });
@@ -102,17 +165,26 @@ ipcMain.handle('stop-timer', () => {
 });
 
 ipcMain.handle('store-camera-snap-image-on-disk', (_event, data) => {
-    const snapDir = path.join(import.meta.dirname, "user-camera-snap");
-    if (!fs.existsSync(snapDir)) {
-        fs.mkdirSync(snapDir, { recursive: true });
-    }
-    const filePath = path.join(snapDir, `${Date.now()}.jpg`);
+    ensureDirs();
+    const filePath = path.join(CAMERA_DIR, `${Date.now()}.jpg`);
     fs.writeFileSync(filePath, Buffer.from(data));
 });
 
-ipcMain.handle('quit-app', () => {
-    stopTimers();
-    app.quit();
+ipcMain.handle('store-screen-snap-image-on-disk', (_event, data) => {
+    ensureDirs();
+    const filePath = path.join(SCREEN_DIR, `${Date.now()}.jpg`);
+    fs.writeFileSync(filePath, Buffer.from(data));
+});
+
+ipcMain.handle('capture-screen-now', async () => {
+    const buffer = await captureOsScreen();
+    if (buffer) {
+        ensureDirs();
+        const filePath = path.join(SCREEN_DIR, `${Date.now()}.jpg`);
+        fs.writeFileSync(filePath, buffer);
+        return { success: true, filePath };
+    }
+    return { success: false };
 });
 
 app.whenReady().then(() => {
