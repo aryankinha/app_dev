@@ -31,5 +31,13 @@ contextBridge.exposeInMainWorld("athena", {
         const fn = (_event, isFs) => callback(isFs);
         ipcRenderer.on('fullscreen-change', fn);
         return () => ipcRenderer.removeListener('fullscreen-change', fn);
+    },
+    registerListenerForBlurWarning: (callback) => {
+        const fn = () => callback();
+        ipcRenderer.on('blur-warning', fn);
+        return () => ipcRenderer.removeListener('blur-warning', fn);
+    },
+    showRules: () => {
+        ipcRenderer.send('show-rules');
     }
 });

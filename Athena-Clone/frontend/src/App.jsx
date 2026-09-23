@@ -18,6 +18,7 @@ function App() {
   const [cameraEnabled, setCameraEnabled] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
   const [timer, setTimer] = useState('');
+  const [blurWarning, setBlurWarning] = useState('');
 
   // Exam flow: 'setup' | 'exam' | 'result'
   const [step, setStep] = useState('setup');
@@ -88,6 +89,12 @@ function App() {
       setFullScreen(isFs);
     });
 
+    // Register Listener for Blur Warning from Main
+    const removeBlurListener = window.athena?.registerListenerForBlurWarning?.(() => {
+      setBlurWarning('⚠️ Notice: Exam window must remain active. Switching apps is restricted.');
+      setTimeout(() => setBlurWarning(''), 5000);
+    });
+
     // Check initial fullscreen status from Main if Electron
     window.athena?.isFullScreen?.().then((isFs) => {
       if (isFs) setFullScreen(true);
@@ -107,6 +114,7 @@ function App() {
       removeTimerTickListener?.();
       removeCameraSnapListener?.();
       removeFullScreenListener?.();
+      removeBlurListener?.();
       document.removeEventListener('fullscreenchange', onFsChange);
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(t => t.stop());
@@ -238,7 +246,6 @@ function App() {
 
     setSubmitting(true);
     try {
-      // Flush all selected answers to the backend
       for (const q of questions) {
         const chosen = selectedAnswers[q.id];
         if (chosen !== undefined) {
@@ -259,7 +266,6 @@ function App() {
         return;
       }
 
-      // Quiz submitted: stop main timer and camera tracks
       await window.athena?.stopTimerOnMain?.();
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(t => t.stop());
@@ -291,6 +297,7 @@ function App() {
     setSelectedAnswers({});
     setFinalResult(null);
     setSubmitting(false);
+    setBlurWarning('');
   }
 
   const currentQ = questions[currentIndex];
@@ -298,6 +305,12 @@ function App() {
 
   return (
     <div className="page-container">
+      {blurWarning && (
+        <div className="warning-banner" style={{ backgroundColor: '#fef3c7', color: '#92400e', padding: '12px 16px', borderRadius: '8px', marginBottom: '16px', fontWeight: 600, border: '1px solid #fde68a' }}>
+          {blurWarning}
+        </div>
+      )}
+
       {/* SCREEN 1: SETUP */}
       {step === 'setup' && (
         <>
@@ -376,6 +389,13 @@ function App() {
           </div>
 
           <div className="bottom-actions">
+            <button
+              className="btn btn-outline"
+              style={{ marginRight: '12px' }}
+              onClick={() => window.athena?.showRules?.()}
+            >
+              Exam Rules
+            </button>
             <button
               className="btn btn-primary"
               disabled={!canStartTest}
