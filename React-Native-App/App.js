@@ -24,6 +24,7 @@ function ChatStack() {
       <Stack.Screen
         name="Conversation"
         component={Conversation}
+        options={{ headerShown: false }}
       />
     </Stack.Navigator>
   );
